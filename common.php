@@ -16,7 +16,7 @@ function xCurl($url,$cookie=null,$postdata=null,$header=array()){
 	return $re;
 };
 //  获取POSTDATA的sign
-function getsign($data){
+function signpd($data){
 	$data=implode('&', $data).'&sign='.md5(implode('', $data).'tiebaclient!!!');
 	return $data;
 };
