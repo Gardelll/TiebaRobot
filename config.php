@@ -1,6 +1,6 @@
 <?php
-    $bduss = '';
-    $tbs = '';
-    $rbname = '';
-    $apikey = '';
+	$bduss = '';
+	$tbs = '';
+	$rbname = '';
+	$apikey = '';
 ?>
