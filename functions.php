@@ -103,7 +103,7 @@
 			case 308000:
 				$content = $re['text'].'。';
 				foreach ($re['list'] as $list)
-					$content .= "\n列表".'【'.$list['name'].'】：（原料：'.$list[$counts]['info'].'）【图片：'.$list[$counts]['icon'].'】【链接：'.$list[$counts]['detailurl'].'】；';
+					$content .= "\n列表".'【'.$list['name'].'】：（原料：'.$list['info'].'）【图片：'.$list['icon'].'】【链接：'.$list['detailurl'].'】；';
 				break;
 			case 40002:
 				$content = '亲，叫我干嘛';

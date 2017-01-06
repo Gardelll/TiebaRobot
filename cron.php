@@ -43,7 +43,7 @@
 			$content = '回复 ' . $re_m[$type.'_list'][$times]['replyer']['name'] . ' :' . robotreply($apikey,$content,$re_m[$type.'_list'][$times]['replyer']['id']) . '#(滑稽)';
 		elseif (strstr($content,'爱你一万年')) {
 			follow($bduss,$tbs,$re_m[$type.'_list'][$times]['replyer']['portrait']);
-			$content = '爱上了我，我就是你的人了。关注我让我们一起愉快地聊天吧！#(太开心)';
+			$content = '回复 ' . $re_m[$type.'_list'][$times]['replyer']['name'] . ' :' .'爱上了我，我就是你的人了。关注我让我们一起愉快地聊天吧！#(太开心)';
 		}
 		else
 			$content = '回复 ' . $re_m[$type.'_list'][$times]['replyer']['name'] . ' :' . '亲，初次见面，无耻求关注#(滑稽)，对我说“爱你一万年”，我就会关注你哦。#(乖)';
