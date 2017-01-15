@@ -1,14 +1,17 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
 <?php
-	header("Content-Type: text/html;charset=utf8");
 	date_default_timezone_set('PRC');
-	define('IS_GARDEL',true);
 	define('SYSTEM_ROOT', dirname(__FILE__).'/');
+	//		代码开源，请勿修改版权！
 
 
 
 	//    用于生成配置文件
 	//    请修改以下信息。
-	$bduss = ' UNpUFd4VC1zSDRwZXBlVGNiendMaHNnRVg4VzJZazc0RE4xfjNWRnN6N1N1eWxZSVFBQUFBJCQAAAAAAAAAAAEAAAATtWRYsMnXqNPD0vvLrrv6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANIuAljSLgJYe';//百度Cookie中的BDUSS
+	$bduss = 'p6UFZ6ZmRGZVpwWS1FbWZRdlB3cVV3cENsU3F0SjQxd2VwZW9VeXBiMVYzS0pZSVFBQUFBJCQAAAAAAAAAAAEAAAATtWRYsMnXqNPD0vvLrrv6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFVPe1hVT3tYT0';//百度Cookie中的BDUSS
 	$tulingapi = '82c91c64cc75413d99cecfb019cb232e';//图灵机器人接口码，在http://tuling123.com获得
 
 
@@ -20,7 +23,7 @@
 
 
 	//    以下信息不用更改。
-	$re = array('_client_id=' . 'wappc_1483110951554_684','_client_type=' . 2,'_client_version=' . '8.1.0.4','_phone_imei=' . '861110010884802','bdusstoken=' . $bduss . '|null','channel_id=','channel_uid=','from=' . 'baidu_appstore','model=' . 'Redmi Note 3');
+	$re = array('_client_id=' . 'wappc_1483110951554_684','_client_type=' . 2,'_client_version=' . '8.1.0.4','_phone_imei=' . '861110010884802','bdusstoken=' . $bduss . '|null','channel_id=','channel_uid=','from=' . 'baidu_appstore','model=' . 'Kliton F168');
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL,'http://c.tieba.baidu.com/c/s/login');
 	curl_setopt($ch, CURLOPT_POSTFIELDS,implode('&', $re).'&sign='.md5(implode('', $re).'tiebaclient!!!'));
@@ -38,7 +41,7 @@
 		$tbs = $re['anti']['tbs'];
 		$bduss = $re['user']['BDUSS'];
 		$rbname = $re['user']['name'];
-		echo '成功登录'.$rbname.'！';
+		echo '成功登录“'.$rbname.'”！';
 	};
 	$re = null;
 	$postdata = null;

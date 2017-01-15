@@ -1,12 +1,12 @@
+<meta http-equiv="Content-Type" content="text/plain; charset=utf-8" />
 <?php
   /*
   *百度贴吧自动回帖PHP版
-  *作者:    孙新
+  *作者:    Gardel
   *email:  sunxinao@hotmail.com
   *懒得整理。先这样好咯(눈_눈)
-  *2016年12月24日 星期六
+  *2017年1月16日 星期一
   */
-	header("Content-Type: text/html;charset=utf8");
 	date_default_timezone_set('PRC');
 	set_time_limit(0);
 	define('IS_GARDEL',true);
@@ -33,10 +33,13 @@
 
 // 获取quoteid;fidid代号，并判断是否为长回复。
 		$fid = getfid($bduss,$tbs,$re_m[$type.'_list'][$times]['fname']);
-		if ($re_m[$type.'_list'][$times]['is_floor'] == 1)
+		if ($re_m[$type.'_list'][$times]['is_floor'] == 1) {
 			$pid = $re_m[$type.'_list'][$times]['quote_pid'];
-		else
+			$spid = $re_m[$type.'_list'][$times]['post_id'];
+		} else {
 			$pid = $re_m[$type.'_list'][$times]['post_id'];
+			$spid = $re_m[$type.'_list'][$times]['post_id'];
+		};
 
 // 用图灵接口调用自动回复,详见http://tuling123.com
 		if ($re_m[$type.'_list'][$times]['replyer']['is_friend'])
@@ -50,7 +53,9 @@
 
 // 回复
 		reply:
-		$re = send_client($bduss,$tbs,$fid,$re_m[$type.'_list'][$times]['thread_id'],$pid,$re_m[$type.'_list'][$times]['fname'],$content);
+		if (strlen($content) >= 5000) $content = mb_strcut($content,0,5000,'utf-8');
+		$re = send_client($bduss,$tbs,$fid,$re_m[$type.'_list'][$times]['thread_id'],$pid,$spid,$re_m[$type.'_list'][$times]['fname'],$content);
+		//$re = send_client($bduss,$tbs,$fid,$re_m[$type.'_list'][$times]['thread_id'],null,null,$re_m[$type.'_list'][$times]['fname'],$content);print_r($re);
 		switch ($re['error_code']) {
 			case 0:
 				echo $rbname.'回复：'.$content."\n";
@@ -64,16 +69,18 @@
 			case 220034:
 				echo $re['error_msg']."\n";
 				sleep(5);
-				send_firefox($bduss,$tbs,$fid,$re_m[$type.'_list'][$times]['thread_id'],$pid,$re_m[$type.'_list'][$times]['fname'],$content);
+				send_firefox($bduss,$tbs,$fid,$re_m[$type.'_list'][$times]['thread_id'],$pid,$spid,$re_m[$type.'_list'][$times]['fname'],$content);
 				break;
+			case 230046:
 			case 230902:
 				echo $re['error_msg']."\n";
-				$pid = null;
+				$pid = null;$spid = null;
 				$content = preg_replace("/回复 (\s|@)*?{$re_m[$type.'_list'][$times]['replyer']['name']}\s*?(:|：)/i",'',$content);
 				$content .= ' @'.$re_m[$type.'_list'][$times]['replyer']['name'];
 				sleep(5);
 				goto reply;
 				break;
+			case 3250003:
 			case 110001:
 				echo $re['error_msg']."\n";
 				break;

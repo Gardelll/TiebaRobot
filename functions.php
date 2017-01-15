@@ -36,17 +36,17 @@
 		return $re['post']['id'];
 	};*/
 // 回复
-	function send_firefox($bduss,$tbs,$fid,$tid,$pid,$kw,$content) {
-		$postdata='ie=utf-8&kw='.urlencode($kw).'&fid='.$fid.'&tid='.$tid.'&vcode_md5=&quote_id='.$pid.'&rich_text=1&tbs='.$tbs.'&content='.urlencode($content).'&mouse_pwd=60%2C58%2C60%2C38%2C60%2C50%2C59%2C59%2C3%2C59%2C38%2C58%2C38%2C59%2C38%2C58%2C3%2C63%2C62%2C57%2C51%2C63%2C51%2C3%2C59%2C57%2C60%2C60%2C38%2C61%2C60%2C50%2C'.time().'3600&mouse_pwd_t='.time().'360&mouse_pwd_isclick=0__type__=reply';
-		$re = json_decode(xCurl('http://tieba.baidu.com/f/commit/post/add','BDUSS='.$bduss,$postdata),true);
+	function send_firefox($bduss,$tbs,$fid,$tid,$pid,$spid,$kw,$content) {
+		$postdata='ie=utf-8&kw='.urlencode($kw).'&fid='.$fid.'&tid='.$tid.'&quote_id='.$pid.'&rich_text=1&tbs='.$tbs.'&content='.urlencode($content).'&lp_type=0&lp_sub_type=0&new_vcode=1&tag=11&repostid='.$spid.'&anonymous=0';
+		$re = json_decode(gzdecode(xCurl('http://tieba.baidu.com/f/commit/post/add','BDUSS='.$bduss,$postdata,array('Accept-Language: en-US,en;q=0.5','Accept-Encoding: gzip','Content-Type: application/x-www-form-urlencoded; charset=UTF-8','X-Requested-With: XMLHttpRequest','Referer: http://tieba.baidu.com/p/'.$tid,'Connection: keep-alive'))),true);
 		return $re;
 	};
-	function send_client($bduss,$tbs,$fid,$tid,$pid,$kw,$content) {
+	function send_client($bduss,$tbs,$fid,$tid,$pid,$spid,$kw,$content) {
 		$ts = time().'487';
 		$postdata = implode('&',array (
 			'BDUSS=' . urlencode($bduss),
 			'_client_id=' . 'wappc_1483110951554_684',
-			'_client_type=2',
+			'_client_type=2',//1=IPhone,2=Android,3=WindowsPhone,4=Windows8
 			'_client_version=' . '8.1.0.4',
 			'_phone_imei=861110010884802',
 			'anonymous=1',
@@ -65,8 +65,8 @@
 			'new_vcode=1',
 			'quote_id=' . $pid,
 			'reply_uid=' . 'null',
-			'repostid=' . $pid,
-			'sign=' . md5('BDUSS='.$bduss.'_client_id=wappc_1483110951554_684'.'_client_type=2'.'_client_version=8.1.0.4'.'_phone_imei=861110010884802'.'anonymous=1'.'barrage_time=0'.'content='.$content.'fid='.$fid.'floor_num=0'.'from=baidu_appstore'.'is_ad=0'.'is_addition=0'.'is_barrage=0'.'is_giftpost=0'.'is_twzhibo_thread=0'.'kw='.$kw.'model=Kliton F168'.'new_vcode=1'.'quote_id='.$pid.'reply_uid=null'.'repostid='.$pid.'tbs='.$tbs.'tid='.$tid.'timestamp='.$ts.'vcode_tag=12'.'tiebaclient!!!'),
+			'repostid=' . $spid,
+			'sign=' . md5('BDUSS='.$bduss.'_client_id=wappc_1483110951554_684'.'_client_type=2'.'_client_version=8.1.0.4'.'_phone_imei=861110010884802'.'anonymous=1'.'barrage_time=0'.'content='.$content.'fid='.$fid.'floor_num=0'.'from=baidu_appstore'.'is_ad=0'.'is_addition=0'.'is_barrage=0'.'is_giftpost=0'.'is_twzhibo_thread=0'.'kw='.$kw.'model=Kliton F168'.'new_vcode=1'.'quote_id='.$pid.'reply_uid=null'.'repostid='.$spid.'tbs='.$tbs.'tid='.$tid.'timestamp='.$ts.'vcode_tag=12'.'tiebaclient!!!'),
 			'tbs=' . $tbs,
 			'tid=' . $tid,
 			'timestamp=' . $ts,
