@@ -9,5 +9,5 @@
  3.设置计划任务或者监控到cron.php<br />
 ## 大家试试在百度贴吧 @吧专用饮水机
  多@就可以帮我多测试多改进。<br />
-### 赞助：
-![alipay](http://blog.gardel.cf/wp-content/uploads/alipay.jpg "alipay")
+-------------------------
+ 于是我就暂缓更新了
