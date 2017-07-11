@@ -86,7 +86,7 @@
 // 图灵接口
 	function robotreply($apikey,$content,$userid){
 		$content = trim($content," \n");
-		if ($content == '') $content = '打个招呼';
+		if (empty($content)) $content = '打个招呼';
 		$re = json_decode(xCurl('http://www.tuling123.com/openapi/api',null,'key='.$apikey.'&info='.$content.'&userid='.$userid),true);
 		switch ($re['code']){
 			case 100000:
