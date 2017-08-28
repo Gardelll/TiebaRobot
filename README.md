@@ -2,7 +2,7 @@
 =========================
 百度贴吧机器人，可回复@和楼中楼对话
 -------------------------
-##开发中，请勿下载！<br />
+## 开发中，请勿下载！<br />
 ### 使用方法
  1.安装前打开login.php输入BDUSS和图灵apikey。<br />
  2.访问你上传的网址，按提示操作。<br />
@@ -11,7 +11,7 @@
  本程序需要用到protobuf php扩展<br />
  可在<a href="https://github.com/google/protobuf/releases">这里</a>下载php版的源码编译安装<br />
  此外，如果你没有安装php-dev，你还需要下载php的源码包<br />
-```SHELLL
+``` Shell
 tar zxvf protobuf-x.x.x.tgz
 cd protobuf-x.x.x
 ./configure --prefix=../Protobuf
