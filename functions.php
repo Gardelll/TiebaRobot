@@ -1,19 +1,7 @@
 <?php
 	if (!defined('IS_GARDEL')) exit();
 //    定义自定义函数
-	function xCurl($url,$cookie=null,$postdata=null,$header=array('User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0','Accept: */*','Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3','Content-Type: application/x-www-form-urlencoded; charset=UTF-8','Referer: http://tieba.baidu.com/','Connection: keep-alive')){
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,$url);
-		if (!is_null($postdata)) curl_setopt($ch, CURLOPT_POSTFIELDS,$postdata);
-		if (!is_null($cookie)) curl_setopt($ch, CURLOPT_COOKIE,$cookie);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-		if (strstr($url,'https://')) curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-		$re = curl_exec($ch);
-		curl_close($ch);
-		return $re;
-	};
+
 //  获取贴吧的fid代号顺便签到
 	function getfid($bduss,$tbs,$kw){
 		$re=json_decode(xCurl('http://tieba.baidu.com/sign/info?kw='.urlencode($kw).'&ie=utf-8','BDUSS='.$bduss),true);

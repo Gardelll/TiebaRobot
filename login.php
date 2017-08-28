@@ -11,8 +11,8 @@
 
 	//    用于生成配置文件
 	//    请修改以下信息。
-	$bduss = 'p6UFZ6ZmRGZVpwWS1FbWZRdlB3cVV3cENsU3F0SjQxd2VwZW9VeXBiMVYzS0pZSVFBQUFBJCQAAAAAAAAAAAEAAAATtWRYsMnXqNPD0vvLrrv6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFVPe1hVT3tYT0';//百度Cookie中的BDUSS
-	$tulingapi = '82c91c64cc75413d99cecfb019cb232e';//图灵机器人接口码，在http://tuling123.com获得
+	$bduss = '';//百度Cookie中的BDUSS
+	$tulingapi = '';//图灵机器人接口码，在http://tuling123.com获得
 
 
 

@@ -1,1 +1,5 @@
 index.html
+.gitignore
+.git/*
+.git
+*.proto
