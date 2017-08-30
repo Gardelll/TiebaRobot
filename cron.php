@@ -7,7 +7,7 @@
  */
 header('Content-Type: text/plain; charset=utf-8');
 require_once './init.php';
-if (!defined(RB_BDUSS)) {
+if (!defined('RB_BDUSS')) {
 	header('Location: install.php');
 	exit();
 }
@@ -17,10 +17,11 @@ if ($replyme) {
 	do_reply(array_slice(TiebaRobot::getReply(), 0, $replyme));
 }
 if ($atme) {
-	ao_reply(array_slice(TiebaRobot::getAt(), 0, $atme));
+	do_reply(array_slice(TiebaRobot::getAt(), 0, $atme));
 }
 
 function do_reply($msgs) {
+	global $black_list;
 	for ($i = 0; $i < count($msgs); $i ++) {
 		if (!isset($msgs[$i]['content']) || empty($msgs[$i]['content'])) continue;
 		$content = trim(preg_replace("/@" . RB_NAME . "\s*?|回复 (\s|@)*?" . RB_NAME . "\s*?(:|：)/i",'',$msgs[$i]['content'])," \n.…");
@@ -35,6 +36,7 @@ function do_reply($msgs) {
 		};
 		$to = $msgs[$i]['replyer']['id'];
 		$replyer = $msgs[$i]['replyer']['name'];
+		if (in_array($replyer, $black_list) || in_array($msgs[$i]['replyer']['name_show'], $black_list)) continue;
 
 		// 用图灵接口调用自动回复,详见http://tuling123.com
 		if ($msgs[$i]['replyer']['is_friend'])

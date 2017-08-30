@@ -11,5 +11,7 @@ require_once(SYSTEM_ROOT . '/config.php');
 		die('找不到文件:'.$filename);
 	}
 });*/
-require_once (SYSTEM_ROOT . '/TiebaRobot.php');
+require_once(SYSTEM_ROOT . '/HttpUtil.php');
+require_once(SYSTEM_ROOT . '/TiebaRobot.php');
+require_once(SYSTEM_ROOT . '/blacklist.php');
 error_reporting(E_ALL^E_WARNING^E_NOTICE);
