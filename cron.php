@@ -1,84 +1,73 @@
-<meta http-equiv="Content-Type" content="text/plain; charset=utf-8" />
 <?php
-  /*
-  *百度贴吧自动回帖PHP版
-  *作者:    Gardel
-  *email:  sunxinao@hotmail.com
-  *懒得整理。先这样好咯(눈_눈)
-  *2017年1月16日 星期一
-  */
-	date_default_timezone_set('PRC');
-	set_time_limit(0);
-	define('IS_GARDEL',true);
-	define('SYSTEM_ROOT', dirname(__FILE__).'/');
-	include (SYSTEM_ROOT.'config.php');
-	if (is_null($bduss))
-		header('location: login.php');
-	include (SYSTEM_ROOT.'functions.php');
+/**
+ * 百度贴吧自动回帖PHP版
+ * @author    Gardel
+ * @email  sunxinao@hotmail.com
+ * @date 2017年8月30日 18:29 星期三
+ */
+header('Content-Type: text/plain; charset=utf-8');
+require_once './init.php';
+if (!defined(RB_BDUSS)) {
+	header('Location: install.php');
+	exit();
+}
 
-// 回复 "回复我的" 部分
-	for ($step = 1 ; $step <= 2 ; $step ++) {
-		switch ($step) {
-			case 1:
-				$type = 'reply';
-				break;
-			case 2:
-				$type = 'at';
-				break;
-		};
-	$re_m = getfeed($bduss,$type);
-	//file_put_contents('./log_'.$type.'.txt',json_encode($re_m,1));
-	for ($times = 0 ; $times < $re_m['message'][$type.'me'] ; $times ++) {	//你可能会想到foreach()，但我觉得这里用for更好一些
-		$content = trim(preg_replace("/@{$rbname}\s*?|回复 (\s|@)*?{$rbname}\s*?(:|：)/i",'',$re_m[$type.'_list'][$times]['content'])," \n\…");
+list($replyme, $atme) = TiebaRobot::getFeedCount();
+if ($replyme) {
+	do_reply(array_slice(TiebaRobot::getReply(), 0, $replyme));
+}
+if ($atme) {
+	ao_reply(array_slice(TiebaRobot::getAt(), 0, $atme));
+}
 
-// 获取quoteid;fidid代号，并判断是否为长回复。
-		$fid = getfid($bduss,$tbs,$re_m[$type.'_list'][$times]['fname']);
-		if ($re_m[$type.'_list'][$times]['is_floor'] == 1) {
-			$pid = $re_m[$type.'_list'][$times]['quote_pid'];
-			$spid = $re_m[$type.'_list'][$times]['post_id'];
+function do_reply($msgs) {
+	for ($i = 0; $i < count($msgs); $i ++) {
+		if (!isset($msgs[$i]['content']) || empty($msgs[$i]['content'])) continue;
+		$content = trim(preg_replace("/@" . RB_NAME . "\s*?|回复 (\s|@)*?" . RB_NAME . "\s*?(:|：)/i",'',$msgs[$i]['content'])," \n.…");
+		$fid = TiebaRobot::getFid($msgs[$i]['fname']);
+		$pid = null;$spid = null;
+		if ($msgs[$i]['is_floor']) {
+			$pid = $msgs[$i]['quote_pid'];
+			$spid = $msgs[$i]['post_id'];
 		} else {
-			$pid = $re_m[$type.'_list'][$times]['post_id'];
-			$spid = $re_m[$type.'_list'][$times]['post_id'];
+			$pid = $msgs[$i]['post_id'];
+			$spid = $msgs[$i]['post_id'];
 		};
+		$to = $msgs[$i]['replyer']['id'];
+		$replyer = $msgs[$i]['replyer']['name'];
 
-// 用图灵接口调用自动回复,详见http://tuling123.com
-		if ($re_m[$type.'_list'][$times]['replyer']['is_friend'])
-			$content = '回复 ' . $re_m[$type.'_list'][$times]['replyer']['name'] . ' :' . robotreply($apikey,$content,$re_m[$type.'_list'][$times]['replyer']['id']) . '#(滑稽)';
-		elseif (strstr($content,'爱你一万年')) {
-			follow($bduss,$tbs,$re_m[$type.'_list'][$times]['replyer']['portrait']);
-			$content = '回复 ' . $re_m[$type.'_list'][$times]['replyer']['name'] . ' :' .'爱上了我，我就是你的人了。关注我让我们一起愉快地聊天吧！#(太开心)';
+		// 用图灵接口调用自动回复,详见http://tuling123.com
+		if ($msgs[$i]['replyer']['is_friend'])
+			$content = '回复 ' . $replyer . ' :' . TiebaRobot::robotReply($content, $to) . '#(滑稽)';
+		elseif (strstr($content,'爱你一万年') !== false) {
+			TiebaRobot::follow($msgs[$i]['replyer']['portrait']);
+			if (!($msgs[$i]['replyer']['is_friend'])) $content = '回复 ' . $replyer . ' :' .'下一步：关注我，我们必须成为好朋友才可以一起愉快地聊天#(太开心)';
+			else $content = '回复 ' . $replyer . ' :' . '让我们一起愉快地聊天吧#(滑稽)';
 		}
 		else
-			$content = '回复 ' . $re_m[$type.'_list'][$times]['replyer']['name'] . ' :' . '亲，初次见面，无耻求关注#(滑稽)，对我说“爱你一万年”，我就会关注你哦。#(乖)';
+			$content = '回复 ' . $replyer . ' :' . '亲，初次见面，无耻求互粉互粉互粉!#(滑稽)，对我说“爱你一万年”，我就会关注你哦。#(乖)';
+			if (empty($pid) || empty($spid)) $content = preg_replace("/回复\\s+" . $replyer . "\s+(:|：)/i", ' @' . $replyer .' ', $content);
 
-// 回复
-		reply:
-		if (strlen($content) >= 5000) $content = mb_strcut($content,0,5000,'utf-8');
-		$re = send_client($bduss,$tbs,$fid,$re_m[$type.'_list'][$times]['thread_id'],$pid,$spid,$re_m[$type.'_list'][$times]['fname'],$content);
-		//$re = send_client($bduss,$tbs,$fid,$re_m[$type.'_list'][$times]['thread_id'],null,null,$re_m[$type.'_list'][$times]['fname'],$content);print_r($re);
+		// 回复
+		if (mb_strlen($content, 'utf_8') >= 5000) $content = mb_strcut($content, 0 , 5000,'utf-8');
+		$re = TiebaRobot::sendReply($fid, $msgs[$i]['thread_id'], $pid, $to, $spid, $msgs[$i]['fname'], $content);
 		switch ($re['error_code']) {
 			case 0:
-				echo $rbname.'回复：'.$content."\n";
+				echo RB_NAME . '回复：' . $content . "\n";
 				break;
 			case 1:
 				echo $re['error_msg']."\n";
-				include(SYSTEM_ROOT.'login.php');
 				exit();
 				break;
 			case 4:
 			case 220034:
-				echo $re['error_msg']."\n";
-				sleep(5);
-				send_firefox($bduss,$tbs,$fid,$re_m[$type.'_list'][$times]['thread_id'],$pid,$spid,$re_m[$type.'_list'][$times]['fname'],$content);
+				echo $re['error_msg']." 十秒后重试\n";
+				sleep(10);
+				$i--;
 				break;
 			case 230046:
 			case 230902:
 				echo $re['error_msg']."\n";
-				$pid = null;$spid = null;
-				$content = preg_replace("/回复 (\s|@)*?{$re_m[$type.'_list'][$times]['replyer']['name']}\s*?(:|：)/i",'',$content);
-				$content .= ' @'.$re_m[$type.'_list'][$times]['replyer']['name'];
-				sleep(5);
-				goto reply;
 				break;
 			case 3250003:
 			case 110001:
@@ -86,11 +75,7 @@
 				break;
 			default:
 				echo $re['error_code'].':'.$re['error_msg']."\n";
-		};
-		unset($re);
-	};
-	unset($re_m);
-	};
-
-
-?>
+		}
+	}
+	unset($re);
+}
