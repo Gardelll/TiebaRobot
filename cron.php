@@ -39,16 +39,17 @@ function do_reply($msgs) {
 		if (in_array($replyer, $black_list) || in_array($msgs[$i]['replyer']['name_show'], $black_list)) continue;
 
 		// 用图灵接口调用自动回复,详见http://tuling123.com
-		if ($msgs[$i]['replyer']['is_friend'])
+		if ($msgs[$i]['replyer']['is_friend']) { //需是好友才回复，如果不需要的话把括号里改成true就行
 			$content = '回复 ' . $replyer . ' :' . TiebaRobot::robotReply($content, $to) . '#(滑稽)';
-		elseif (strstr($content,'爱你一万年') !== false) {
+		} elseif (strstr($content,'爱你一万年') !== false) { //自动关注的关键词
 			TiebaRobot::follow($msgs[$i]['replyer']['portrait']);
-			if (!($msgs[$i]['replyer']['is_friend'])) $content = '回复 ' . $replyer . ' :' .'下一步：关注我，我们必须成为好朋友才可以一起愉快地聊天#(太开心)';
+			if (!($msgs[$i]['replyer']['is_friend'])) $content = '回复 ' . $replyer . ' :' .'下一步：关注我。我们必须成为好朋友才可以一起愉快地聊天#(滑稽)';
 			else $content = '回复 ' . $replyer . ' :' . '让我们一起愉快地聊天吧#(滑稽)';
-		}
-		else
+		} else {
 			$content = '回复 ' . $replyer . ' :' . '亲，初次见面，无耻求互粉互粉互粉!#(滑稽)，对我说“爱你一万年”，我就会关注你哦。#(乖)';
-			if (empty($pid) || empty($spid)) $content = preg_replace("/回复\\s+" . $replyer . "\s+(:|：)/i", ' @' . $replyer .' ', $content);
+			//continue;//取消注释continue则不会回复上面那句话
+		}
+		if (empty($pid) || empty($spid)) $content = preg_replace("/回复\\s+" . $replyer . "\s+(:|：)/i", ' @' . $replyer . ' ', $content);
 
 		// 回复
 		if (mb_strlen($content, 'utf_8') >= 5000) $content = mb_strcut($content, 0 , 5000,'utf-8');

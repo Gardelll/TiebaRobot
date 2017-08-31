@@ -9,7 +9,7 @@ class HttpUtil {
 	private $protobuf_data;
 
 	public function __construct($url) {
-		if (empty($url)) throw new Exception('url不能为空');
+		if (empty($url)) throw (new Exception('url不能为空'));
 		$this->randomString = md5(mt_rand() . microtime()) . '*';
 		$this->url = $url;
 	}
@@ -93,7 +93,7 @@ class HttpUtil {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 50);
 		$re = curl_exec($ch);
-		if (! $re) throw (new Exception("无法抓取网页"));
+		if (! $re) throw (new Exception('无法抓取网页'));
 		curl_close($ch);
 		return $re;
 	}
@@ -113,7 +113,7 @@ class HttpUtil {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 50);
 		$re = curl_exec($ch);
-		if (! $re) throw (new Exception("无法抓取网页"));
+		if (! $re) throw (new Exception('无法抓取网页'));
 		curl_close($ch);
 		return $re;
 	}
