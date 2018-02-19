@@ -61,9 +61,7 @@ class HttpUtil {
 
 	public function build() {
 		if (empty($this->protobuf_data)) {
-			foreach ($this->postdata as $key => $val)
-				$this->postdata_raw .= ($key . '=' . urlencode($val) . '&');
-				$this->postdata_raw = substr($this->postdata_raw, 0 , strlen($this->postdata_raw) - 1);
+			$this->postdata_raw = http_build_query($this->postdata);
 		} else {
 			foreach ($this->postdata as $key => $val) {
 				$this->postdata_raw .= ('--' . $this->randomString . "\r\n" .
@@ -83,9 +81,7 @@ class HttpUtil {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $this->url . '?' . $this->postdata_raw);
 		if (!empty($this->cookie)) {
-			$coo = '';
-			foreach ($this->cookie as $key => $val)
-				$coo .= ($key . '=' . $val .'; ');
+			$coo = http_build_query($this->cookie, '', '; ');
 			curl_setopt($ch, CURLOPT_COOKIE, $coo);
 		}
 		curl_setopt($ch, CURLOPT_HTTPHEADER, empty($this->header) ? array('User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0','Accept: */*','Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3','Content-Type: application/x-www-form-urlencoded; charset=UTF-8','Referer: http://tieba.baidu.com/','Connection: keep-alive') : $this->header);
@@ -102,9 +98,7 @@ class HttpUtil {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $this->url);
 		if (!empty($this->cookie)) {
-			$coo = '';
-			foreach ($this->cookie as $key => $val)
-				$coo .= ($key . '=' . $val .'; ');
+			$coo = http_build_query($this->cookie, '', '; ');
 			curl_setopt($ch, CURLOPT_COOKIE, $coo);
 		}
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->postdata_raw);
