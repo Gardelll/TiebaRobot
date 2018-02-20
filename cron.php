@@ -3,7 +3,7 @@
  * 百度贴吧自动回帖PHP版
  * @author    Gardel
  * @email  sunxinao@hotmail.com
- * @date 2017年8月30日 18:29 星期三
+ * @date 2018年2月20日 19:44 星期二
  */
 header('Content-Type: text/plain; charset=utf-8');
 require_once './init.php';
@@ -12,13 +12,15 @@ if (!defined('RB_BDUSS')) {
 	exit();
 }
 
-list($replyme, $atme) = TiebaRobot::getFeedCount();
-if ($replyme) {
-	do_reply(array_slice(TiebaRobot::getReply(), 0, $replyme));
-}
-if ($atme) {
-	do_reply(array_slice(TiebaRobot::getAt(), 0, $atme));
-}
+do {
+	list($replyme, $atme) = TiebaRobot::getFeedCount();
+	if ($replyme) {
+		do_reply(array_slice(TiebaRobot::getReply(), 0, $replyme));
+	}
+	if ($atme) {
+		do_reply(array_slice(TiebaRobot::getAt(), 0, $atme));
+	}
+} while (PHP_SAPI == 'cli' && sleep(30));
 
 function do_reply($msgs) {
 	global $black_list;
