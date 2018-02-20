@@ -3,7 +3,7 @@
  * 百度贴吧自动回帖PHP版
  * @author    Gardel
  * @email  sunxinao@hotmail.com
- * @date 2018年2月20日 19:44 星期二
+ * @date 2018年2月20日 20:00 星期二
  */
 header('Content-Type: text/plain; charset=utf-8');
 require_once './init.php';
@@ -20,7 +20,7 @@ do {
 	if ($atme) {
 		do_reply(array_slice(TiebaRobot::getAt(), 0, $atme));
 	}
-} while (PHP_SAPI == 'cli' && sleep(30));
+} while (PHP_SAPI == 'cli' && 0 === sleep(30));
 
 function do_reply($msgs) {
 	global $black_list;
